@@ -8,30 +8,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const customSwatch = MaterialColor(
-    0xFFFF5252,
-    <int, Color>{
-      50: Color(0xFFFFEBEE),
-      100: Color(0xFFFFCDD2),
-      200: Color(0xFFEF9A9A),
-      300: Color(0xFFE57373),
-      400: Color(0xFFEF5350),
-      500: Color(0xFFFF5252),
-      600: Color(0xFFE53935),
-      700: Color(0xFFD32F2F),
-      800: Color(0xFFC62828),
-      900: Color(0xFFB71C1C),
-    },
-  );
-
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Kiosk',
       theme: ThemeData(
-        primarySwatch: customSwatch,
+        primarySwatch: Colors.green,
       ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
@@ -54,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mobile Scanner"),
+        title: const Text("Kiosk"),
         actions: [
           IconButton(
             color: Colors.white,
@@ -102,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
     /// open screen
     if (!_screenOpened) {
       final String code = barcode.rawValue ?? "---";
-      debugPrint('Barcode found! $code');
+      debugPrint('QR code found! $code');
       _screenOpened = true;
       Navigator.push(
           context,
@@ -136,7 +120,7 @@ class _FoundCodeScreenState extends State<FoundCodeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Found Code"),
+        title: Text("Zeskanowano QR Code"),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
