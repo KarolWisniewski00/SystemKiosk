@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -33,6 +37,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   MobileScannerController cameraController = MobileScannerController();
   bool _screenOpened = false;
+  var uid = '';
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!_screenOpened) {
       final String code = barcode.rawValue ?? "---";
       debugPrint('QR code found! $code');
+      var uid = code;
       _screenOpened = true;
       Navigator.push(
           context,
@@ -94,6 +100,29 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (context) =>
                 FoundCodeScreen(screenClosed: _screenWasClosed, value: code),
           ));
+    }
+  }
+
+  final String apiUrl = 'http://vps-699e8f36.vps.ovh.net/api';
+  var headers = {'Content-Type': 'application/json'};
+
+  Future<void> postData() async {
+    try {
+      var response = await http.post(
+        Uri.parse('${apiUrl}/times/create/'),
+        body: json.encode({
+          "date": DateTime.now().millisecondsSinceEpoch,
+          "location": {"lat": "", "long": ""},
+          "photo": "",
+          "uid": uid ?? ''
+        }),
+        headers: headers,
+      );
+      print('Status: ${response.statusCode}');
+      print('Body: ${response.body}');
+      print('URL: ${apiUrl}/times/create/');
+    } catch (error) {
+      print('Error: $error');
     }
   }
 
@@ -139,7 +168,7 @@ class _FoundCodeScreenState extends State<FoundCodeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Scanned Code:",
+                "Wysłano czas pracy z powodzeniem",
                 style: TextStyle(
                   fontSize: 20,
                 ),
